@@ -1,39 +1,39 @@
-import math
-import numpy as np
+
 import csv
-import random
+import numpy as np
+import math
 import copy
 import sys
-
+import random
 from timeit import default_timer as timer
 
 
 class State:
-    # Create a new state
+    # State constructor
     def __init__(self, route: [], distance: int = 0):
         self.route = route
         self.distance = distance
 
-    # Comparison between states
+    # Compare 2 states
     def __eq__(self, other):
         for i in range(len(self.route)):
             if (self.route[i] != other.route[i]):
                 return False
         return True
 
-    # Sort states
+    # Is current state's distance shorter than other state's distance
     def __lt__(self, other):
         return self.distance < other.distance
 
-    # Print a state
+    # Printout a state
     def __repr__(self):
         return ('({0},{1})\n'.format(self.route, self.distance))
 
-    # Create a shallow copy
+    # Copy state
     def copy(self):
         return State(self.route, self.distance)
 
-    # Create a deep copy
+    # Deeply Copy state
     def deepcopy(self):
         return State(copy.deepcopy(self.route), copy.deepcopy(self.distance))
 
@@ -41,16 +41,16 @@ class State:
     def update_distance(self, matrix, home):
         # Reset distance
         self.distance = 0
-        # Keep track of departing city
+        # City of departure
         from_index = home
-        # Loop all cities in the current route
+        # Walk through each city in the current route
         for i in range(len(self.route)):
             self.distance += matrix[from_index][self.route[i]]
             from_index = self.route[i]
         # Add the distance back to home
         self.distance += matrix[from_index][home]
 
-    # Shuffle routes
+    # Random routes shuffling
     def shuffle_route(self, matrix, home):
         random.shuffle(self.route)
         self.update_distance(matrix, home)
@@ -59,19 +59,17 @@ class State:
 
 
 class City:
-    # Create a new city
+    # City constructor
     def __init__(self, index: int, distance: int):
         self.index = index
         self.distance = distance
 
-    # Sort cities
+    # Is current city's distance shorter than other city's distance
     def __lt__(self, other):
         return self.distance < other.distance
 
 # Get the best random solution from a population
-
-
-def get_random_solution(matrix: [], home: int, city_indexes: [], size: int):
+def get_best_solution_by_population(matrix: [], home: int, city_indexes: [], size: int):
     # Create a list with city indexes
     cities = city_indexes.copy()
     # Remove the home city
@@ -92,16 +90,13 @@ def get_random_solution(matrix: [], home: int, city_indexes: [], size: int):
     return population[0]
 
 # Get the best random solution by distance
-
-
 def get_best_solution_by_distance(matrix: [], home: int):
-    # Variables
     route = []
     from_index = home
     length = len(matrix) - 1
-    # Loop until route is complete
+
     while len(route) < length:
-        # Get a matrix row
+        # Matrix row
         row = matrix[from_index]
         # Create a dictionary of cities
         cities = {}
@@ -125,8 +120,6 @@ def get_best_solution_by_distance(matrix: [], home: int):
     return state
 
 # Mutate a solution
-
-
 def mutate(matrix: [], home: int, state: State, mutation_rate: float = 0.01):
     # Create a copy of the state
     mutated_state = state.deepcopy()
@@ -167,10 +160,10 @@ def hill_climbing(matrix: [], home: int, initial_state: State, max_iterations: i
     # Return the best state
     return best_state
 
-# Random Restart is adopted to reduce possibility of local optimum
+# Reduce possibility of local optimum
 
 
-def random_restart(matrixofcities, home, initial_state, max_iterations, mutation_rate):
+def restart_random(matrixofcities, home, initial_state, max_iterations, mutation_rate):
     state = initial_state.copy()
     Fitness = [0] * max_iterations
     count = 0
@@ -185,16 +178,16 @@ def random_restart(matrixofcities, home, initial_state, max_iterations, mutation
 # Get the TSP file as input
 
 
-def get_tsp_file(fn):
+def get_file_input(fn):
 
+    # open file in read mode
     my_file = open(fn, 'r')
 
     NAME = my_file.readline().strip().split()[1]  # NAME
     TYPE = my_file.readline().strip().split()[1]  # TYPE
     COMMENT = my_file.readline().strip()  # COMMENT
     DIMENSION = my_file.readline().strip().split()[-1]  # DIMENSION
-    EDGE_WEIGHT_TYPE = my_file.readline().strip().split()[
-        1]  # EDGE_WEIGHT_TYPE
+    EDGE_WEIGHT_TYPE = my_file.readline().strip().split()[1]  # EDGE_WEIGHT_TYPE
     my_file.readline()
 
     # Read node list
@@ -203,7 +196,7 @@ def get_tsp_file(fn):
     for i in range(0, N):
         x, y = my_file.readline().strip().split()[1:]
         nodelist.append([float(x), float(y)])
-
+    # Close stream
     my_file.close()
 
     # Calculation of Matrix of cities' distances
@@ -224,29 +217,28 @@ def get_tsp_file(fn):
 
 
 def main():
-    # Index of start location
+    # Start location
     home = 2
     # Max iterations
     max_iterations = 1000
     # Distances in miles between cities, same indexes (i, j) as in the cities array
     file_name = sys.argv[1]
-    matrix = get_tsp_file(file_name)
+    matrix = get_file_input(file_name)
     N = np.shape(matrix)[0]
     city_indexes = list(range(N))
     cities_int = range(N)
     cities = [str(x) for x in cities_int]
 
-    # state1 as the first approach to Random Restart
-    state1 = get_random_solution(matrix, home, city_indexes, 200)
-    # state2 as the second approach to Random Restart
-    state2 = get_best_solution_by_distance(matrix, home)
+    # state_population as the first approach to Random Restart
+    state_population = get_best_solution_by_population(matrix, home, city_indexes, 200)
+    # state_distance as the second approach to Random Restart
+    state_distance = get_best_solution_by_distance(matrix, home)
 
     print('-- Start Iterations ... --')
-    print("please wait ...")
+    print("Running...")
 
     start = timer()
-    [state, fitness] = random_restart(
-        matrix, home, state2, max_iterations, 0.01)
+    [state, fitness] = restart_random(matrix, home, state_distance, max_iterations, 0.01)
 
     # open the file in the write mode
     f = open('solution.csv', 'w', newline='')
@@ -254,7 +246,7 @@ def main():
     # create the csv writer
     writer = csv.writer(f)
 
-    print('-- Hill climbing solution --')
+    print('-- HC solution --')
     print(cities[home], end='')
     writer.writerow(cities[home])
     for i in range(0, len(state.route)):
@@ -267,11 +259,11 @@ def main():
     # writer.writerow(cities[home])
     f.close()
     end = timer()
-    print('\n\nTotal distance: {0} miles'.format(state.distance))
+    print('\n\nDistance: {0} miles'.format(state.distance))
     print()
-    print('Time Taken: ', round(end-start, 5), ' seconds')
+    print('Time: ', round(end-start, 5), ' sec(s)')
 
 
-# Tell python to run main method
+
 if __name__ == "__main__":
     main()

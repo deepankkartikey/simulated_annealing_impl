@@ -1,0 +1,50 @@
+##### a280.tsp
+-- State 1 - Random solution selection from Population
+
+-- Applying Random Restart on Simulated Annealing ... --
+-- Simulated Annealing with Random Restart completed !!! --
+
+Total distance: 6434.377484464763 miles
+Time Taken:  290.03162  seconds
+
+
+-- Applying Random Restart on Hill Climbing ... --
+-- Hill Climbing with Random Restart completed !!! --
+
+Total distance: 7015.51253638153 miles
+Time Taken:  300.57585  seconds
+
+
+##########################################
+
+
+-- State 2 - Best solution selection based on distance 
+
+-- Applying Random Restart on Simulated Annealing ... --
+-- Simulated Annealing with Random Restart completed !!! --
+
+Total distance: 4247.534575120079 miles
+Time Taken:  291.40446  seconds
+
+
+-- Applying Random Restart on Hill Climbing ... --
+-- Hill Climbing with Random Restart completed !!! --
+
+Total distance: 3493.1462424091546 miles
+Time Taken:  280.4853  seconds
+
+
+
+
+###### vm1748.tsp
+-- Applying Random Restart on Simulated Annealing ... --
+-- Simulated Annealing with Random Restart completed !!! --
+
+Total distance: 9610353.602933869 miles
+Time Taken:  2123.76226  seconds
+
+-- Applying Random Restart on Hill Climbing ... --
+-- Hill Climbing with Random Restart completed !!! --
+
+Total distance: 9523048.96568388 miles
+Time Taken:  2195.39142  seconds

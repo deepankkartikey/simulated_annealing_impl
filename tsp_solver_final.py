@@ -251,7 +251,7 @@ def main():
     # Index of start location
     home = 2
     # Max iterations
-    max_iterations = 1000
+    max_iterations = 100
     # Distances in miles between cities, same indexes (i, j) as in the cities array
     file_name = sys.argv[1]
     co_ordinates, distancesMatrix = get_data_from_tsp_file(file_name)
@@ -283,19 +283,19 @@ def main():
     print('Time Taken: ', round(end-start, 5), ' seconds\n\n')
 
 
-    print('\n\n-- Applying Random Restart on Hill Climbing ... --')
-    start = timer()
-    algorithm = "Hill_Climbing"
-    [state, fitness] = random_restart(algorithm, distancesMatrix, home, state1, max_iterations, 0.01)
-    print('\n\n-- Hill Climbing with Random Restart completed !!! --')
-    end = timer()
+    # print('\n\n-- Applying Random Restart on Hill Climbing ... --')
+    # start = timer()
+    # algorithm = "Hill_Climbing"
+    # [state, fitness] = random_restart(algorithm, distancesMatrix, home, state1, max_iterations, 0.01)
+    # print('\n\n-- Hill Climbing with Random Restart completed !!! --')
+    # end = timer()
 
     # write solution to csv file
-    # writeToFile(cities, home, state)
+    writeToFile(cities, home, state)
 
-    print('\n\nTotal distance: {0} miles'.format(state.distance))
-    print()
-    print('Time Taken: ', round(end-start, 5), ' seconds\n\n')
+    # print('\n\nTotal distance: {0} miles'.format(state.distance))
+    # print()
+    # print('Time Taken: ', round(end-start, 5), ' seconds\n\n')
 
 
 

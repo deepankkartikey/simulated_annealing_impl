@@ -62,6 +62,9 @@ class City:
 
 
 def get_data_from_tsp_file(fn):
+    """ Reads co_ordinates from the tsp file. \
+        Calculates ditance matrix between cities in the dataset. \
+        Returns distance matrix and co_ordinates dictionary """
     my_file = open(fn, 'r')
 
     NAME = my_file.readline().strip().split()[1]  # NAME
@@ -77,7 +80,6 @@ def get_data_from_tsp_file(fn):
     distancesList = []
     co_ordinates = {}
     N = int(DIMENSION)
-    # print("N: ", N)
     for i in range(0, N):
         x, y = my_file.readline().strip().split()[1:]
         co_ordinates[i+1] = (float(x), float(y))
@@ -103,66 +105,32 @@ def get_data_from_tsp_file(fn):
 
 
 def get_random_solution_from_population(matrix: [], home: int, city_indexes: [], size: int):
-    # Create a list with city indexes
+    """ Returns best solution State from a randomly generated population \
+        created using all cities indexes except the home city. """
     cities = city_indexes.copy()
-    # Remove the home city
     cities.pop(home)
-    # Create a population
     population = []
     for i in range(size):
-        # Shuffle cities at random
         random.shuffle(cities)
-        # Create a state
         state = State(cities[:])
         state.update_distance(matrix, home)
-        # Add an individual to the population
         population.append(state)
-    # Sort population
     population.sort()
-    # Return the best solution
     return population[0]
 
 
-def get_best_solution_by_distance(matrix: [], home: int):
-    # Variables
-    route = []
-    from_index = home
-    length = len(matrix) - 1
-    # Loop until route is complete
-    while len(route) < length:
-        # Get a matrix row
-        row = matrix[from_index]
-        # Create a dictionary of cities
-        cities = {}
-        for i in range(len(row)):
-            cities[i] = City(i, row[i])
-        # Remove cities that already is assigned to the route
-        del cities[home]
-        for i in route:
-            del cities[i]
-        # Create list of cities
-        sorted = list(cities.values())
-        # Sort cities
-        sorted.sort()
-        # Add the city with the shortest distance
-        from_index = sorted[0].index
-        route.append(from_index)
-    # Create a new state and update the distance
-    state = State(route)
-    state.update_distance(matrix, home)
-    # Return a state
-    return state
-
-
 def probability(p):
+    """ Returns random probability to be used for Simulated Annealing """
     return p > random.uniform(0.0, 1.0)
 
 
 def exp_schedule(k=20, lam=0.005, limit=1000):
+    """ Calculates Cooling Schedule in Simulated Annealing """
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
 
 def mutate(matrix: [], home: int, state: State, mutation_rate: float = 0.01):
+    """ Returns a mutated state based on mutation rate to further optimize solution """
     mutated_state = state.deepcopy()
     for i in range(len(mutated_state.route)):
         if random.random() < mutation_rate:
@@ -176,6 +144,7 @@ def mutate(matrix: [], home: int, state: State, mutation_rate: float = 0.01):
 
 
 def simulated_annealing(matrix: [], home: int, initial_state: State, mutation_rate: float = 0.01, schedule=exp_schedule()):
+    """ Core logic for Simulated Annealing along with cooling schedule and mutation to get a neighbor """
     best_state = initial_state
     for t in range(sys.maxsize):
         T = schedule(t)
@@ -187,50 +156,26 @@ def simulated_annealing(matrix: [], home: int, initial_state: State, mutation_ra
             best_state = neighbor
 
 
-def hill_climbing(matrix: [], home: int, initial_state: State, max_iterations: int, mutation_rate: float = 0.01):
-    best_state = initial_state
-    # An iterator can be used to give the algorithm more time to find a solution
-    iterator = 0
-    # Create an infinite loop
-    while True:
-        # Mutate the best state
-        neighbor = mutate(matrix, home, best_state, mutation_rate)
-        # Check if the distance is less than in the best state
-        if (neighbor.distance >= best_state.distance):
-            iterator += 1
-            if (iterator > max_iterations):
-                break
-        if (neighbor.distance < best_state.distance):
-            best_state = neighbor
-    # Return the best state
-    return best_state
-
-
 def random_restart(algorithm, matrixofcities, home, initial_state, max_iterations, mutation_rate):
+    """ Returns best_state based on fitness to reduce possibility of local maxima/optima """
     state = initial_state.copy()
     Fitness = [0] * max_iterations
     count = 0
     algorithm = algorithm.lower()
     while count < max_iterations:
-        if algorithm == 'simulated_annealing':
-            best_state = simulated_annealing(
+        best_state = simulated_annealing(
                 matrixofcities, home, initial_state, mutation_rate)
-        elif algorithm == 'hill_climbing':
-            best_state = hill_climbing(
-                matrixofcities, home, initial_state, max_iterations, mutation_rate)
         Fitness[count] = best_state.distance
         initial_state = best_state
         count += 1
         # print("Iteration: {0}, Current Fitness: {1}, Best Fitness: {2}"\
         #     .format(count, initial_state.distance, best_state.distance))
-
     return [best_state, Fitness]
 
 
 def writeToFile(cities, home, state):
+    """ Write Solution to CSV file"""
     f = open('solution.csv', 'w', newline='')
-
-    # create the csv writer
     writer = csv.writer(f)
 
     print('\n\n-- Simulated Annealing solution --')
@@ -248,20 +193,17 @@ def writeToFile(cities, home, state):
 
 
 def main():
-    # Index of start location
+    """Driver function for tsp_solver. \
+        Gets dataset file_name from command line and calls other utility functions"""
     home = 2
-    # Max iterations
-    max_iterations = 100
-    # Distances in miles between cities, same indexes (i, j) as in the cities array
+    max_iterations = 1000
     file_name = sys.argv[1]
     co_ordinates, distancesMatrix = get_data_from_tsp_file(file_name)
-    # pprint.pprint(distancesMatrix)
 
+    # pprint.pprint(distancesMatrix)
     # print("distancesMatrix: ",len(distancesMatrix[0]))
 
     N = np.shape(distancesMatrix)[0]
-    # print("N: ", N)
-    # return None
     city_indexes = list(range(N))
     cities_int = range(N)
     cities = [str(x) for x in cities_int]
@@ -269,7 +211,7 @@ def main():
     state1 = get_random_solution_from_population(distancesMatrix, home, city_indexes, 200)
     # print("state1: ", state1)
 
-    state2 = get_best_solution_by_distance(distancesMatrix, home)
+    # state2 = get_best_solution_by_distance(distancesMatrix, home)
     # print("state2: ", state2)
 
     print('\n\n-- Applying Random Restart on Simulated Annealing ... --')
@@ -282,21 +224,7 @@ def main():
     print()
     print('Time Taken: ', round(end-start, 5), ' seconds\n\n')
 
-
-    # print('\n\n-- Applying Random Restart on Hill Climbing ... --')
-    # start = timer()
-    # algorithm = "Hill_Climbing"
-    # [state, fitness] = random_restart(algorithm, distancesMatrix, home, state1, max_iterations, 0.01)
-    # print('\n\n-- Hill Climbing with Random Restart completed !!! --')
-    # end = timer()
-
-    # write solution to csv file
     writeToFile(cities, home, state)
-
-    # print('\n\nTotal distance: {0} miles'.format(state.distance))
-    # print()
-    # print('Time Taken: ', round(end-start, 5), ' seconds\n\n')
-
 
 
 if __name__ == "__main__":

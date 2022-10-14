@@ -1,50 +1,69 @@
+##### pr76.tsp
+
+Home: 2 , Iteration: 500 , Mutation Rate: 0.2
+Total distance: 335890.48308643984 miles
+Time Taken: 31.49707 seconds
+
+Home: 2 , Iteration: 500 , Mutation Rate: 0.6
+Total distance: 448630.9375062022 miles
+Time Taken: 35.17044 seconds
+
+Home: 2 , Iteration: 1000 , Mutation Rate: 0.2
+Total distance: 301039.9007212289 miles
+Time Taken: 64.03872 seconds
+
+Home: 2 , Iteration: 1000 , Mutation Rate: 0.6
+Total distance: 429484.43664504477 miles
+Time Taken: 76.10704 seconds
+
+Home: 20 , Iteration: 500 , Mutation Rate: 0.2
+Total distance: 338467.3291395372 miles
+Time Taken: 32.08637 seconds
+
+Home: 20 , Iteration: 500 , Mutation Rate: 0.6
+Total distance: 426267.63147964736 miles
+Time Taken: 37.46573 seconds
+
+Home: 20 , Iteration: 1000 , Mutation Rate: 0.2
+Total distance: 308501.45896590047 miles
+Time Taken: 63.73884 seconds
+
+Home: 20 , Iteration: 1000 , Mutation Rate: 0.6
+Total distance: 433319.1063583457 miles
+Time Taken: 77.95825 seconds
+
 ##### a280.tsp
--- State 1 - Random solution selection from Population
 
--- Applying Random Restart on Simulated Annealing ... --
--- Simulated Annealing with Random Restart completed !!! --
+Home: 2 , Iteration: 500 , Mutation Rate: 0.2
+Total distance: 26642.8668446275 miles
+Time Taken: 119.56607 seconds
 
-Total distance: 6434.377484464763 miles
-Time Taken:  290.03162  seconds
+Home: 2 , Iteration: 500 , Mutation Rate: 0.6
+Total distance: 29349.940989189487 miles
+Time Taken: 147.94828 seconds
 
+Home: 2 , Iteration: 1000 , Mutation Rate: 0.2
+Total distance: 26612.38770012711 miles
+Time Taken: 250.36898 seconds
 
--- Applying Random Restart on Hill Climbing ... --
--- Hill Climbing with Random Restart completed !!! --
+Home: 2 , Iteration: 1000 , Mutation Rate: 0.6
+Total distance: 28584.369045702944 miles
+Time Taken: 285.48864 seconds
 
-Total distance: 7015.51253638153 miles
-Time Taken:  300.57585  seconds
+Home: 20 , Iteration: 500 , Mutation Rate: 0.2
+Total distance: 26442.865456255924 miles
+Time Taken: 119.95911 seconds
 
+Home: 20 , Iteration: 500 , Mutation Rate: 0.6
+Total distance: 29219.393603071054 miles
+Time Taken: 140.74296 seconds
 
-##########################################
+Home: 20 , Iteration: 1000 , Mutation Rate: 0.2
+Total distance: 26595.247792590948 miles
+Time Taken: 260.86515 seconds
 
-
--- State 2 - Best solution selection based on distance 
-
--- Applying Random Restart on Simulated Annealing ... --
--- Simulated Annealing with Random Restart completed !!! --
-
-Total distance: 4247.534575120079 miles
-Time Taken:  291.40446  seconds
-
-
--- Applying Random Restart on Hill Climbing ... --
--- Hill Climbing with Random Restart completed !!! --
-
-Total distance: 3493.1462424091546 miles
-Time Taken:  280.4853  seconds
-
-
-
+Home: 20 , Iteration: 1000 , Mutation Rate: 0.6
+Total distance: 28729.64483635883 miles
+Time Taken: 286.74168 seconds
 
 ###### vm1748.tsp
--- Applying Random Restart on Simulated Annealing ... --
--- Simulated Annealing with Random Restart completed !!! --
-
-Total distance: 9610353.602933869 miles
-Time Taken:  2123.76226  seconds
-
--- Applying Random Restart on Hill Climbing ... --
--- Hill Climbing with Random Restart completed !!! --
-
-Total distance: 9523048.96568388 miles
-Time Taken:  2195.39142  seconds

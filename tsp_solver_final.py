@@ -9,6 +9,7 @@ import numpy as np
 from timeit import default_timer as timer
 
 class State:
+    """ A state is a representation of route from one city to other """
     def __init__(self, route: [], distance: int = 0):
         self.route = route
         self.distance = distance
@@ -31,32 +32,26 @@ class State:
     def deepcopy(self):
         return State(copy.deepcopy(self.route), copy.deepcopy(self.distance))
 
-    # Update distance
     def update_distance(self, matrix, home):
-        # Reset distance
+        """ calculates distance of current state """
         self.distance = 0
-        # Keep track of departing city
         from_index = home
-        # Loop all cities in the current route
         for i in range(len(self.route)):
             self.distance += matrix[from_index][self.route[i]]
             from_index = self.route[i]
-        # Add the distance back to home
         self.distance += matrix[from_index][home]
 
-    # Shuffle routes
     def shuffle_route(self, matrix, home):
+        """ brings randomness in the state """
         random.shuffle(self.route)
         self.update_distance(matrix, home)
 
 
 class City:
-    # Create a new city
     def __init__(self, index: int, distance: int):
         self.index = index
         self.distance = distance
 
-    # Sort cities
     def __lt__(self, other):
         return self.distance < other.distance
 
@@ -178,7 +173,7 @@ def writeToFile(cities, home, state):
     f = open('solution.csv', 'w', newline='')
     writer = csv.writer(f)
 
-    print('\n\n-- Simulated Annealing solution --')
+    print('-- Simulated Annealing solution --')
     print(cities[home], end='')
     writer.writerow(cities[home])
     for i in range(0, len(state.route)):
@@ -189,6 +184,7 @@ def writeToFile(cities, home, state):
     newarr = arr.reshape(len(state.route), 1)
     writer.writerows(newarr)
     writer.writerow(cities[home])
+    print()
     f.close()
 
 

@@ -1,8 +1,13 @@
-### Assignment-1
+## SIMULATED ANNEALING Implementation
 
-### CSI-5137 - Software Verification and Testing
+#### Simulated Annealing - a way to select worse neighbor based on some probability metric so that eventually global maxima can be reached.
 
-- Simulated Annealing - a way to select worse neighbor based on some probability metric so that eventually global maxima can be reached.
+#### How to execute ?
+`python3 tsp_solver.py "dataset_name"`
+- tsp_solver.py - contains the logic for solving a travelling salesman problem
+- dataset_name - file name of dataset like a280.tsp , pr76.tsp
+
+- once the execution is complete a solution.csv file is generated containing travelled path of the best solution
 
 - Probability is based on loss and temperature. e^ (-loss/temperature)
   - Loss is how much worse a neighbor is as compared to current state.
